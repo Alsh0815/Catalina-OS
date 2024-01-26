@@ -107,4 +107,6 @@ cd ..
 rm edk2/Conf/target.txt
 cp -f build/edk2_target.txt edk2/Conf/target.txt
 
-ln -s boot edk2/CatalinaLoaderPkg >/dev/null 2>&1
+if [[ ! -e $REPO_DIR/edk2/CatalinaLoaderPkg ]]; then
+    ln -s $REPO_DIR/boot $REPO_DIR/edk2/CatalinaLoaderPkg
+fi
