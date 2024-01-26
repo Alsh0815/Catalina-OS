@@ -1,0 +1,5 @@
+{
+    "C_Cpp.default.systemIncludePath": [
+        "./edk2/MdePkg"
+    ]
+}

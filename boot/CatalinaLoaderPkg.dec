@@ -1,0 +1,5 @@
+[Defines]
+    DEC_SPECIFICATION              = 0x00010005
+    PACKAGE_NAME                   = CatalinaLoaderPkg
+    PACKAGE_GUID                   = ef641851-5da9-7c32-ad8c-e047fd2de16f
+    PACKAGE_VERSION                = 0.1

@@ -1,0 +1,69 @@
+function BuildBoot() {
+    echo Build boot
+}
+
+function BuildKernel() {
+    echo Build kernel
+}
+
+function MakeImg() {
+    echo Make a image file.
+}
+
+if [[ $1 = "" ]]; then
+    echo Help:
+    exit 0
+fi
+
+FLAG_BUILD_ALL=false
+FLAG_BUILD_BOOT=false
+FLAG_BUILD_KERNEL=false
+FLAG_TARGET_ARCH=false
+while getopts abkm: OPT; do
+    case $OPT in
+    a) FLAG_BUILD_ALL=true ;;
+    b) FLAG_BUILD_BOOT=true ;;
+    k) FLAG_BUILD_KERNEL=true ;;
+    m) FLAG_TARGET_ARCH=true VALUE_TARGET_ARCH="$OPTARG" ;;
+    esac
+done
+
+SUPPORT_ARCH=(
+    intel-64
+    x64
+    x86-64
+)
+
+if [[ $FLAG_TARGET_ARCH = false ]]; then
+    echo No architecture is specified for the build.
+    exit 2
+fi
+
+IS_SUPPORTED_ARCH=false
+for var in ${SUPPORT_ARCH[@]}; do
+    if [[ $VALUE_TARGET_ARCH == $var ]]; then
+        IS_SUPPORTED_ARCH=true
+    fi
+done
+
+if [[ $IS_SUPPORTED_ARCH = false ]]; then
+    echo $VALUE_TARGET_ARCH is an unsupported architecture.
+    exit 2
+fi
+
+if [[ $FLAG_BUILD_ALL = true ]] && ([[ $FLAG_BUILD_BOOT = true ]] || [[ $FLAG_BUILD_KERNEL = true ]]); then
+    echo 'Option "-a" and option "-b" ("-k") cannot be specified together.'
+    exit 2
+fi
+
+if [[ $FLAG_BUILD_ALL = true ]]; then
+    BuildBoot $VALUE_TARGET_ARCH
+    BuildKernel $VALUE_TARGET_ARCH
+    MakeImg
+elif [[ $FLAG_BUILD_BOOT = true ]]; then
+    BuildBoot $VALUE_TARGET_ARCH
+    MakeImg
+elif [[ $FLAG_BUILD_KERNEL = true ]]; then
+    BuildKernel $VALUE_TARGET_ARCH
+    MakeImg
+fi
