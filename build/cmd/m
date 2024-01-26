@@ -1,5 +1,5 @@
 function BuildBoot() {
-    echo Build boot
+    build
 }
 
 function BuildKernel() {

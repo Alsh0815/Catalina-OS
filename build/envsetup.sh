@@ -94,8 +94,6 @@ function init() {
     for var in ${llvm_list[@]}; do
         ln -s /usr/bin/$var-$LLVM_VERSION /usr/bin/$var >/dev/null 2>&1
     done
-
-    ln -s boot edk2/CatalinaLoaderPkg >/dev/null 2>&1
 }
 
 if [[ $1 = "--init" ]]; then
@@ -108,3 +106,5 @@ cd ..
 
 rm edk2/Conf/target.txt
 cp -f build/edk2_target.txt edk2/Conf/target.txt
+
+ln -s boot edk2/CatalinaLoaderPkg >/dev/null 2>&1
