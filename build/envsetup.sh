@@ -105,3 +105,6 @@ fi
 cd edk2
 source edksetup.sh
 cd ..
+
+rm edk2/Conf/target.txt
+cp -f build/edk2_target.txt edk2/Conf/target.txt
