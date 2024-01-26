@@ -35,7 +35,7 @@ clang_list=(
 )
 
 for var in ${clang_list[@]}; do
-    ln -s /usr/bin/$var-$CLANG_VERSION /usr/bin/$var >/dev/null 2>&1
+    ln -fs /usr/bin/$var-$CLANG_VERSION /usr/bin/$var >/dev/null 2>&1
 done
 
 lld_list=(
@@ -44,7 +44,7 @@ lld_list=(
 )
 
 for var in ${lld_list[@]}; do
-    ln -s /usr/bin/$var-$LLD_VERSION /usr/bin/$var >/dev/null 2>&1
+    ln -fs /usr/bin/$var-$LLD_VERSION /usr/bin/$var >/dev/null 2>&1
 done
 
 llvm_list=(
@@ -97,7 +97,7 @@ llvm_list=(
 )
 
 for var in ${llvm_list[@]}; do
-    ln -s /usr/bin/$var-$LLVM_VERSION /usr/bin/$var >/dev/null 2>&1
+    ln -fs /usr/bin/$var-$LLVM_VERSION /usr/bin/$var >/dev/null 2>&1
 done
 
 cd edk2
@@ -107,6 +107,4 @@ cd ..
 rm edk2/Conf/target.txt
 cp -f build/edk2_target.txt edk2/Conf/target.txt
 
-if [[ ! -e $REPO_DIR/edk2/CatalinaLoaderPkg ]]; then
-    ln -s $REPO_DIR/boot $REPO_DIR/edk2/CatalinaLoaderPkg
-fi
+ln -fs $REPO_DIR/boot $REPO_DIR/edk2/CatalinaLoaderPkg
