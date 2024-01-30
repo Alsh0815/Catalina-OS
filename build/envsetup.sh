@@ -42,4 +42,4 @@ cd ..
 rm edk2/Conf/target.txt
 cp -f ./build/edk2_target.txt ./edk2/Conf/target.txt
 
-ln -fs ./$REPO_DIR/boot ./$REPO_DIR/edk2/CatalinaLoaderPkg
+ln -fs $REPO_DIR/boot $REPO_DIR/edk2/CatalinaLoaderPkg
