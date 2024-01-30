@@ -2,9 +2,9 @@ REPO_DIR=$(pwd)
 CMD_DIR="$REPO_DIR/build/cmd"
 export PATH="$CMD_DIR":$PATH
 
-CLANG_VERSION=10
-LLD_VERSION=7
-LLVM_VERSION=7
+CLANG_VERSION=14
+LLD_VERSION=14
+LLVM_VERSION=14
 
 function init() {
     apt_list=(
