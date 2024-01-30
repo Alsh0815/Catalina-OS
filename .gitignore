@@ -7,4 +7,5 @@
 *.vsix
 
 edk2/*
+output/*
 *.code-workspace

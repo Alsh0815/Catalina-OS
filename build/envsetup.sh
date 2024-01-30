@@ -1,8 +1,11 @@
 REPO_DIR=$(pwd)
 CMD_DIR="$REPO_DIR/build/cmd"
+export CATALINA_PROJECT_DIR="$REPO_DIR"
 export PATH="$CMD_DIR":$PATH
 
 function init() {
+    sudo apt update
+    sudo apt upgrade
     apt_list=(
         build-essential
         clang

@@ -7,7 +7,17 @@ function BuildKernel() {
 }
 
 function MakeImg() {
-    echo Make a image file.
+    DISK_IMG=Catalina-OS_$1.img
+    if [[ ! -d "$CATALINA_PROJECT_DIR/output" ]]; then
+        mkdir "$CATALINA_PROJECT_DIR/output"
+    fi
+    qemu-img create -f raw "$CATALINA_PROJECT_DIR/output/$DISK_IMG" 200M
+    mkfs.fat -n 'CATALINA OS' -s 2 -f 2 -R 32 -F 32 "$CATALINA_PROJECT_DIR/output/$DISK_IMG"
+    mkdir -p "$CATALINA_PROJECT_DIR/mnt"
+    sudo mount -o loop "$CATALINA_PROJECT_DIR/output/$DISK_IMG" "$CATALINA_PROJECT_DIR/mnt"
+    sudo mkdir -p "$CATALINA_PROJECT_DIR/mnt/EFI/BOOT"
+    sudo cp "$CATALINA_PROJECT_DIR/edk2/Build/CatalinaLoader$1/RELEASE_CLANGPDB/$1/Loader.efi" "$CATALINA_PROJECT_DIR/mnt/EFI/BOOT/BOOT$1.EFI"
+    sudo umount "$CATALINA_PROJECT_DIR/mnt"
 }
 
 if [[ $1 = "" ]]; then
@@ -56,14 +66,19 @@ if [[ $FLAG_BUILD_ALL = true ]] && ([[ $FLAG_BUILD_BOOT = true ]] || [[ $FLAG_BU
     exit 2
 fi
 
+TARGET_ARCH=X64
+if ([[ $VALUE_TARGET_ARCH = "intel-64" ]] || [[ $VALUE_TARGET_ARCH = "x64" ]] || [[ $VALUE_TARGET_ARCH = "x86-64" ]]); then
+    TARGET_ARCH=X64
+fi
+
 if [[ $FLAG_BUILD_ALL = true ]]; then
-    BuildBoot $VALUE_TARGET_ARCH
-    BuildKernel $VALUE_TARGET_ARCH
-    MakeImg
+    BuildBoot $TARGET_ARCH
+    BuildKernel $TARGET_ARCH
+    MakeImg $TARGET_ARCH
 elif [[ $FLAG_BUILD_BOOT = true ]]; then
-    BuildBoot $VALUE_TARGET_ARCH
-    MakeImg
+    BuildBoot $TARGET_ARCH
+    MakeImg $TARGET_ARCH
 elif [[ $FLAG_BUILD_KERNEL = true ]]; then
-    BuildKernel $VALUE_TARGET_ARCH
-    MakeImg
+    BuildKernel $TARGET_ARCH
+    MakeImg $TARGET_ARCH
 fi
