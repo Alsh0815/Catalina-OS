@@ -22,14 +22,14 @@ function init() {
         is_installed=$(which $var)
         sudo apt install $var
     done
+
+    sudo chmod 0777 ./build/cmd/emulate
+    sudo chmod 0777 ./build/cmd/m
 }
 
 if [[ $1 = "--init" ]]; then
     init
 fi
-
-sudo chmod 0777 ./build/cmd/emulate
-sudo chmod 0777 ./build/cmd/m
 
 cd edk2
 source edksetup.sh
