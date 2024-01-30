@@ -28,12 +28,15 @@ if [[ $1 = "--init" ]]; then
     init
 fi
 
+sudo chmod 0777 ./build/cmd/emulate
+sudo chmod 0777 ./build/cmd/m
+
 cd edk2
 source edksetup.sh
 make -C ./BaseTools/Source/C
 cd ..
 
 rm edk2/Conf/target.txt
-cp -f build/edk2_target.txt edk2/Conf/target.txt
+cp -f ./build/edk2_target.txt ./edk2/Conf/target.txt
 
-ln -fs $REPO_DIR/boot $REPO_DIR/edk2/CatalinaLoaderPkg
+ln -fs ./$REPO_DIR/boot ./$REPO_DIR/edk2/CatalinaLoaderPkg
