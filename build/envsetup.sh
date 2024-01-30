@@ -25,6 +25,10 @@ function init() {
 
     sudo chmod 0777 ./build/cmd/emulate
     sudo chmod 0777 ./build/cmd/m
+
+    cd edk2
+    make -C ./BaseTools/Source/C
+    cd ..
 }
 
 if [[ $1 = "--init" ]]; then
@@ -33,7 +37,6 @@ fi
 
 cd edk2
 source edksetup.sh
-make -C ./BaseTools/Source/C
 cd ..
 
 rm edk2/Conf/target.txt
