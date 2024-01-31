@@ -10,6 +10,7 @@
 
 [Sources]
     Main.c
+    memory.c
 
 [Packages]
     MdePkg/MdePkg.dec
