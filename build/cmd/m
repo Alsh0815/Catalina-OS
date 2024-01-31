@@ -3,7 +3,9 @@ function BuildBoot() {
 }
 
 function BuildKernel() {
-    echo Build kernel
+    cd "$CATALINA_PROJECT_DIR/kernel"
+    make
+    cd ..
 }
 
 function MakeImg() {
@@ -11,12 +13,18 @@ function MakeImg() {
     if [[ ! -d "$CATALINA_PROJECT_DIR/output" ]]; then
         mkdir "$CATALINA_PROJECT_DIR/output"
     fi
+    if [[ -e "$CATALINA_PROJECT_DIR/kernel/kernel.elf" ]]; then
+        sudo mv "$CATALINA_PROJECT_DIR/kernel/kernel.elf" "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf"
+    fi
     qemu-img create -f raw "$CATALINA_PROJECT_DIR/output/$DISK_IMG" 200M
     mkfs.fat -n 'CATALINA OS' -s 2 -f 2 -R 32 -F 32 "$CATALINA_PROJECT_DIR/output/$DISK_IMG"
     mkdir -p "$CATALINA_PROJECT_DIR/mnt"
     sudo mount -o loop "$CATALINA_PROJECT_DIR/output/$DISK_IMG" "$CATALINA_PROJECT_DIR/mnt"
     sudo mkdir -p "$CATALINA_PROJECT_DIR/mnt/EFI/BOOT"
     sudo cp "$CATALINA_PROJECT_DIR/edk2/Build/CatalinaLoader$1/RELEASE_CLANGPDB/$1/Loader.efi" "$CATALINA_PROJECT_DIR/mnt/EFI/BOOT/BOOT$1.EFI"
+    if [[ -e "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf" ]]; then
+        sudo cp "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf" "$CATALINA_PROJECT_DIR/mnt/kernel.elf"
+    fi
     sudo umount "$CATALINA_PROJECT_DIR/mnt"
 }
 
