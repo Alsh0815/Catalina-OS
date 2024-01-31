@@ -1,4 +1,11 @@
-qemu-system-x86_64 \
-    -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_CODE.fd \
-    -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_VARS.fd \
-    -hda $CATALINA_PROJECT_DIR/output/Catalina-OS_$1.img
+if [[ $1 = "i386" ]]; then
+    qemu-system-i386 \
+        -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_CODE.fd \
+        -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_VARS.fd \
+        -hda $CATALINA_PROJECT_DIR/output/Catalina-OS_i386.img
+elif [[ $1 = "X64" ]]; then
+    qemu-system-x86_64 \
+        -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_CODE.fd \
+        -drive if=pflash,file=$CATALINA_PROJECT_DIR/build/OVMF_VARS.fd \
+        -hda $CATALINA_PROJECT_DIR/output/Catalina-OS_X64.img
+fi
