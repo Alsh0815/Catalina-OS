@@ -1,0 +1,10 @@
+#pragma once
+
+#define KERNEL_MAJOR_VERSION 0
+#define KERNEL_MINOR_VERSION 1
+#define KERNEL_PATCH_VERSION 0
+#define KERNEL_REVIS_VERSION 0
+
+#define BUILD_YEAR 2024
+#define BUILD_MONTH 2
+#define BUILD_DATE 1
