@@ -51,6 +51,40 @@ void Halt(void)
         __asm__("hlt");
 }
 
+EFI_STATUS OpenGOP(EFI_HANDLE image_handle, EFI_GRAPHICS_OUTPUT_PROTOCOL **gop)
+{
+    EFI_STATUS status;
+    UINTN num_gop_handles = 0;
+    EFI_HANDLE *gop_handles = NULL;
+
+    status = gBS->LocateHandleBuffer(
+        ByProtocol,
+        &gEfiGraphicsOutputProtocolGuid,
+        NULL,
+        &num_gop_handles,
+        &gop_handles);
+    if (EFI_ERROR(status))
+    {
+        return status;
+    }
+
+    status = gBS->OpenProtocol(
+        gop_handles[0],
+        &gEfiGraphicsOutputProtocolGuid,
+        (VOID **)gop,
+        image_handle,
+        NULL,
+        EFI_OPEN_PROTOCOL_BY_HANDLE_PROTOCOL);
+    if (EFI_ERROR(status))
+    {
+        return status;
+    }
+
+    FreePool(gop_handles);
+
+    return EFI_SUCCESS;
+}
+
 EFI_STATUS OpenRootDir(EFI_HANDLE image_handle, EFI_FILE_PROTOCOL **root)
 {
     EFI_LOADED_IMAGE_PROTOCOL *loaded_image;
