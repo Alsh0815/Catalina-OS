@@ -1,5 +1,7 @@
 {
     "C_Cpp.default.systemIncludePath": [
-        "./edk2/MdePkg"
+        "./edk2/MdePkg",
+        "./libs/x86_64-elf/include",
+        "./libs/x86_64-elf/include/c++/v1"
     ]
 }
