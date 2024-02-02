@@ -1,3 +1,6 @@
+MAKEFILE_DIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+REPO_DIR := $(shell dirname ${MAKEFILE_DIR})
+
 TARGET = kernel.elf
 OBJS = main.o
 
