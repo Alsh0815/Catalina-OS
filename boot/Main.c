@@ -115,10 +115,6 @@ EFI_STATUS UefiMain(
     EFI_HANDLE ImageHandle,
     EFI_SYSTEM_TABLE *SystemTable)
 {
-    Print(L"[Catalina-OS]\n");
-    Print(L"Version : %d.%d.%d.%d\n", MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, REVIS_VERSION);
-    Print(L"Hello, Catalina-OS World!\n");
-
     CHAR8 memmap_buf[4096 * 4];
     struct MemoryMap memmap = {sizeof(memmap_buf), memmap_buf, 0, 0, 0, 0};
     GetMemoryMap(&memmap);
@@ -128,6 +124,16 @@ EFI_STATUS UefiMain(
 
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     OpenGOP(ImageHandle, &gop);
+
+    UINT8 *frame_buffer = (UINT8 *)gop->Mode->FrameBufferBase;
+    for (UINTN i = 0; i < gop->Mode->FrameBufferSize; ++i)
+    {
+        frame_buffer[i] = 255;
+    }
+
+    Print(L"[Catalina-OS]\n");
+    Print(L"Version : %d.%d.%d.%d\n", MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, REVIS_VERSION);
+    Print(L"Hello, Catalina-OS World!\n");
     Print(
         L"Res: %u x %u, Format: %s, %u pixels/ln\n",
         gop->Mode->Info->HorizontalResolution,
@@ -139,12 +145,6 @@ EFI_STATUS UefiMain(
         gop->Mode->FrameBufferBase,
         gop->Mode->FrameBufferBase + gop->Mode->FrameBufferSize,
         gop->Mode->FrameBufferSize);
-
-    UINT8 *frame_buffer = (UINT8 *)gop->Mode->FrameBufferBase;
-    for (UINTN i = 0; i < gop->Mode->FrameBufferSize; ++i)
-    {
-        frame_buffer[i] = 255;
-    }
 
     EFI_FILE_PROTOCOL *kernel_file;
     root_dir->Open(
@@ -177,11 +177,11 @@ EFI_STATUS UefiMain(
         Halt();
     }
 
-    Print(L"Kernel: 0x%0lx (%lu bytes)\n", kernel_base_addr, kernel_file_size);
-
     Elf64_Ehdr *kernel_ehdr = (Elf64_Ehdr *)kernel_buffer;
     UINT64 kernel_first_addr, kernel_last_addr;
     CalcLoadAddressRange(kernel_ehdr, &kernel_first_addr, &kernel_last_addr);
+
+    Print(L"Kernel: 0x%0lx (%lu bytes)\n", kernel_first_addr, kernel_file_size);
 
     UINTN num_pages = (kernel_last_addr - kernel_first_addr + 0xfff) / 0x1000;
     status = gBS->AllocatePages(AllocateAddress, EfiLoaderData, num_pages, &kernel_first_addr);
