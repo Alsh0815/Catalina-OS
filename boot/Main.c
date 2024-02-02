@@ -254,8 +254,7 @@ EFI_STATUS UefiMain(
         }
     }
 
-    /* UINT64 entry_addr = *(UINT64 *)(kernel_first_addr + 24); */
-    UINT64 entry_addr = *(UINT64 *)(0x1011c0);
+    UINT64 entry_addr = *(UINT64 *)(kernel_first_addr + 24);
 
     typedef void EntryPointType(UINT64, UINT64);
     EntryPointType *entry_point = (EntryPointType *)entry_addr;
