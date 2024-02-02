@@ -127,6 +127,32 @@ EFI_STATUS OpenRootDir(EFI_HANDLE image_handle, EFI_FILE_PROTOCOL **root)
     return EFI_SUCCESS;
 }
 
+EFI_STATUS ReadFile(EFI_FILE_PROTOCOL *file, VOID **buffer)
+{
+    EFI_STATUS status;
+
+    UINTN file_info_size = sizeof(EFI_FILE_INFO) + sizeof(CHAR16) * 12;
+    UINT8 file_info_buffer[file_info_size];
+    status = file->GetInfo(
+        file, &gEfiFileInfoGuid,
+        &file_info_size, file_info_buffer);
+    if (EFI_ERROR(status))
+    {
+        return status;
+    }
+
+    EFI_FILE_INFO *file_info = (EFI_FILE_INFO *)file_info_buffer;
+    UINTN file_size = file_info->FileSize;
+
+    status = gBS->AllocatePool(EfiLoaderData, file_size, buffer);
+    if (EFI_ERROR(status))
+    {
+        return status;
+    }
+
+    return file->Read(file, &file_size, *buffer);
+}
+
 EFI_STATUS UefiMain(
     EFI_HANDLE ImageHandle,
     EFI_SYSTEM_TABLE *SystemTable)
@@ -222,7 +248,7 @@ EFI_STATUS UefiMain(
         }
     }
 
-    UINT64 entry_addr = *(UINT64 *)(kernel_base_addr + 24);
+    UINT64 entry_addr = *(UINT64 *)(kernel_first_addr + 24);
 
     typedef void EntryPointType(UINT64, UINT64);
     EntryPointType *entry_point = (EntryPointType *)entry_addr;
