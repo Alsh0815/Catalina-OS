@@ -1,5 +1,7 @@
 #include <cstdint>
 
+const KERNEL_BUILD_CODE = 1;
+
 extern "C" void KernelMain(uint64_t frame_buffer_base, uint64_t frame_buffer_size)
 {
     uint8_t *frame_buffer = reinterpret_cast<uint8_t *>(frame_buffer_base);
