@@ -5,10 +5,10 @@
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 1
 #define PATCH_VERSION 0
-#define REVIS_VERSION 3
+#define REVIS_VERSION 4
 
 #define BUILD_YEAR 2024
 #define BUILD_MONTH 2
-#define BUILD_DATE 1
+#define BUILD_DATE 2
 
 #endif
