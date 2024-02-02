@@ -14,6 +14,9 @@ function MakeImg() {
         mkdir "$CATALINA_PROJECT_DIR/output"
     fi
     if [[ -e "$CATALINA_PROJECT_DIR/kernel/kernel.elf" ]]; then
+        if [[ -e "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf" ]]; then
+            sudo rm "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf"
+        fi
         sudo mv "$CATALINA_PROJECT_DIR/kernel/kernel.elf" "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf"
     fi
     qemu-img create -f raw "$CATALINA_PROJECT_DIR/output/$DISK_IMG" 200M
@@ -26,6 +29,7 @@ function MakeImg() {
         sudo cp "$CATALINA_PROJECT_DIR/output/Kernel_x64.elf" "$CATALINA_PROJECT_DIR/mnt/kernel.elf"
     fi
     sudo umount "$CATALINA_PROJECT_DIR/mnt"
+    sudo rm -rf "$CATALINA_PROJECT_DIR/mnt"
 }
 
 if [[ $1 = "" ]]; then
