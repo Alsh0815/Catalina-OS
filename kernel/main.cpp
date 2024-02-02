@@ -1,5 +1,9 @@
 #include <cstdint>
 
+int testMethod(int a, int b) {
+    return a * (b + 1);
+}
+
 extern "C" void KernelMain(uint64_t frame_buffer_base, uint64_t frame_buffer_size)
 {
     uint8_t *frame_buffer = reinterpret_cast<uint8_t *>(frame_buffer_base);
@@ -7,9 +11,7 @@ extern "C" void KernelMain(uint64_t frame_buffer_base, uint64_t frame_buffer_siz
     {
         frame_buffer[i] = i % 256;
     }
-    int temp = 1;
-    int ox = temp + 1;
-    int temp2 = ox + temp;
+    int f = testMethod(3, 50);
     while (1)
         __asm__("hlt");
 }
