@@ -159,12 +159,18 @@ EFI_STATUS UefiMain(
     EFI_HANDLE ImageHandle,
     EFI_SYSTEM_TABLE *SystemTable)
 {
+    EFI_STATUS status;
     CHAR8 memmap_buf[4096 * 4];
     struct MemoryMap memmap = {sizeof(memmap_buf), memmap_buf, 0, 0, 0, 0};
     GetMemoryMap(&memmap);
 
     EFI_FILE_PROTOCOL *root_dir;
-    OpenRootDir(ImageHandle, &root_dir);
+    status = OpenRootDir(ImageHandle, &root_dir);
+    if (EFI_ERROR(status))
+    {
+        Print(L"failed to open root directory: %r\n", status);
+        Halt();
+    }
 
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     OpenGOP(ImageHandle, &gop);
@@ -174,8 +180,6 @@ EFI_STATUS UefiMain(
     {
         frame_buffer[i] = 255;
     }
-
-    EFI_STATUS status;
 
     Print(L"[Catalina-OS]\n");
     Print(L"Version : %d.%d.%d.%d\n", MAJOR_VERSION, MINOR_VERSION, PATCH_VERSION, REVIS_VERSION);
