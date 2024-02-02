@@ -10,6 +10,7 @@ LDFLAGS  += --entry KernelMain -z norelro --image-base 0x100000 --static
 
 LOCAL_CPPFLAGS 	  = -I$(REPO_DIR)/libs/x86_64-elf/include \
 					-I$(REPO_DIR)/libs/x86_64-elf/include/c++/v1 \
+					-z separate-code \
 					-nostdlibinc -D__ELF__ -D_LDBL_EQ_DBL -D_GNU_SOURCE -D_POSIX_TIMERS
 
 
