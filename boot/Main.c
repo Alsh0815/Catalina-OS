@@ -26,6 +26,25 @@ void CalcLoadAddressRange(Elf64_Ehdr *ehdr, UINT64 *first, UINT64 *last)
     }
 }
 
+const CHAR16 *GetPixelFormatUnicode(EFI_GRAPHICS_PIXEL_FORMAT fmt)
+{
+    switch (fmt)
+    {
+    case PixelRedGreenBlueReserved8BitPerColor:
+        return L"PixelRedGreenBlueReserved8BitPerColor";
+    case PixelBlueGreenRedReserved8BitPerColor:
+        return L"PixelBlueGreenRedReserved8BitPerColor";
+    case PixelBitMask:
+        return L"PixelBitMask";
+    case PixelBltOnly:
+        return L"PixelBltOnly";
+    case PixelFormatMax:
+        return L"PixelFormatMax";
+    default:
+        return L"InvalidPixelFormat";
+    }
+}
+
 void Halt(void)
 {
     while (1)
@@ -87,8 +106,9 @@ EFI_STATUS UefiMain(
         gop->Mode->FrameBufferBase + gop->Mode->FrameBufferSize,
         gop->Mode->FrameBufferSize);
 
-    UINT8 *frame_buffer = (UINT8*)gop->Mode->FrameBufferBase;
-    for (UINTN i = 0; i < gop->Mode->FrameBufferSize; ++i) {
+    UINT8 *frame_buffer = (UINT8 *)gop->Mode->FrameBufferBase;
+    for (UINTN i = 0; i < gop->Mode->FrameBufferSize; ++i)
+    {
         frame_buffer[i] = 255;
     }
 
