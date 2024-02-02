@@ -73,6 +73,25 @@ EFI_STATUS UefiMain(
     EFI_FILE_PROTOCOL *root_dir;
     OpenRootDir(ImageHandle, &root_dir);
 
+    EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
+    OpenGOP(ImageHandle, &gop);
+    Print(
+        L"Res: %u x %u, Format: %s, %u pixels/ln\n",
+        gop->Mode->Info->HorizontalResolution,
+        gop->Mode->Info->VerticalResolution,
+        GetPixelFormatUnicode(gop->Mode->Info->PixelFormat),
+        gop->Mode->Info->PixelsPerScanLine);
+    Print(
+        L"Frame Buffer: 0x%0lx - 0x%0lx, Size: %lu bytes\n",
+        gop->Mode->FrameBufferBase,
+        gop->Mode->FrameBufferBase + gop->Mode->FrameBufferSize,
+        gop->Mode->FrameBufferSize);
+
+    UINT8 *frame_buffer = (UINT8*)gop->Mode->FrameBufferBase;
+    for (UINTN i = 0; i < gop->Mode->FrameBufferSize; ++i) {
+        frame_buffer[i] = 255;
+    }
+
     EFI_FILE_PROTOCOL *kernel_file;
     root_dir->Open(
         root_dir, &kernel_file, L"\\kernel.elf",
@@ -125,13 +144,13 @@ EFI_STATUS UefiMain(
         if (EFI_ERROR(status))
         {
             Print(L"failed to get memory map: %r\n", status);
-            // while (1);
+            Halt();
         }
         status = gBS->ExitBootServices(ImageHandle, memmap.map_key);
         if (EFI_ERROR(status))
         {
             Print(L"Could not exit boot service: %r\n", status);
-            // while (1);
+            Halt();
         }
     }
 
